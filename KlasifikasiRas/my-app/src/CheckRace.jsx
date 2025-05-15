@@ -73,32 +73,84 @@ function CheckRace() {
     setResults(null);
   };
   
-  const analyzeImage = () => {
+  const analyzeImage = async () => {
     if (!file) return;
     
     setIsLoading(true);
     setResults(null);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Create FormData to send the image file
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Replace with your actual API endpoint where the Python CNN model is hosted
+      const response = await fetch('http://localhost:5000/api/analyze-ethnicity', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      // Parse the response from your Python backend
+      const data = await response.json();
+      
+      // Format the results based on your model's output
       setResults({
         ethnicGroups: [
-          { name: 'Asian', probability: 0.78, details: 'East Asian features predominant' },
-          { name: 'European', probability: 0.15, details: 'Minor European features detected' },
-          { name: 'South Asian', probability: 0.05, details: 'Slight South Asian characteristics' },
-          { name: 'African', probability: 0.02, details: 'Minimal African features' }
+          { 
+            name: 'Black', 
+            probability: data.predictions.Black || 0, 
+            details: data.details?.Black || 'Black features analysis' 
+          },
+          { 
+            name: 'East Asian', 
+            probability: data.predictions['East Asian'] || 0, 
+            details: data.details?.['East Asian'] || 'East Asian features analysis' 
+          },
+          { 
+            name: 'White', 
+            probability: data.predictions.White || 0, 
+            details: data.details?.White || 'White features analysis' 
+          },
+          { 
+            name: 'Indian', 
+            probability: data.predictions.Indian || 0, 
+            details: data.details?.Indian || 'Indian features analysis' 
+          },
+          { 
+            name: 'Latino/Hispanic', 
+            probability: data.predictions.Latino_Hispanic || 0, 
+            details: data.details?.Latino_Hispanic || 'Latino/Hispanic features analysis' 
+          },
+          { 
+            name: 'Middle Eastern', 
+            probability: data.predictions['Middle Eastern'] || 0, 
+            details: data.details?.['Middle Eastern'] || 'Middle Eastern features analysis' 
+          },
+          { 
+            name: 'Southeast Asian', 
+            probability: data.predictions['Southeast Asian'] || 0, 
+            details: data.details?.['Southeast Asian'] || 'Southeast Asian features analysis' 
+          }
         ],
-        confidence: 0.92,
+        confidence: data.confidence || 0.8,
         analysis: {
           facialFeatures: {
-            eyeShape: 'Almond',
-            noseStructure: 'Medium, straight',
-            facialStructure: 'Oval with prominent cheekbones'
+            eyeShape: data.facial_features?.eye_shape || 'Not analyzed',
+            noseStructure: data.facial_features?.nose_structure || 'Not analyzed',
+            facialStructure: data.facial_features?.facial_structure || 'Not analyzed'
           }
         }
       });
-    }, 2500);
+    } catch (err) {
+      console.error('Error analyzing image:', err);
+      setError('Failed to analyze image. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
