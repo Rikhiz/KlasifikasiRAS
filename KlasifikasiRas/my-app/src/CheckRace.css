@@ -1,0 +1,482 @@
+/* Modern styling for the race checker component */
+.race-checker-container {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  padding: 2rem 1rem;
+}
+
+.race-checker-card {
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.race-checker-header {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.race-checker-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.race-checker-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.race-checker-content {
+  padding: 2rem;
+}
+
+.race-checker-footer {
+  padding: 1.5rem 2rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #f0f2f5;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Upload area styling */
+.upload-area {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.upload-area.dragging {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.upload-icon {
+  background-color: #eff6ff;
+  color: #3b82f6;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.upload-text {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.upload-primary-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.upload-secondary-text {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.upload-button {
+  display: inline-block;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.upload-button:hover {
+  background-color: #2563eb;
+}
+
+.upload-formats {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 1rem;
+}
+
+/* Analysis container */
+.analysis-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.image-preview {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #ef4444;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.remove-image-button:hover {
+  background-color: white;
+  transform: scale(1.1);
+}
+
+.image-filename {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  max-width: 240px;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.analyze-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.analyze-button:hover {
+  background-color: #2563eb;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.loading-spinner {
+  color: #3b82f6;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+  width: 60%;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #3b82f6;
+  border-radius: 3px;
+  animation: fill 2.5s ease forwards;
+}
+
+@keyframes fill {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+/* Results container */
+.results-container {
+  margin-top: 1rem;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.results-header {
+  margin-bottom: 2rem;
+}
+
+.results-confidence {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.confidence-indicator {
+  background-color: #22c55e;
+  color: white;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.results-confidence p {
+  font-size: 0.95rem;
+  color: #166534;
+  font-weight: 500;
+}
+
+.results-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Ethnic distribution */
+.ethnic-distribution {
+  margin-bottom: 2.5rem;
+}
+
+.ethnic-group {
+  margin-bottom: 1.25rem;
+}
+
+.ethnic-group-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ethnic-group-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.ethnic-group-percentage {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.ethnic-group-bar {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.ethnic-group-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+.ethnic-group-details {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Facial features */
+.facial-features {
+  margin-bottom: 2.5rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.feature {
+  background-color: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.feature-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.feature-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Results disclaimer */
+.results-disclaimer {
+  display: flex;
+  gap: 0.75rem;
+  background-color: #fff7ed;
+  border: 1px solid #ffedd5;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  color: #9a3412;
+}
+
+.results-disclaimer svg {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.results-disclaimer p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* New analysis button */
+.new-analysis-button {
+  width: 100%;
+  background-color: white;
+  color: #3b82f6;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-analysis-button:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Error message */
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0 2rem 1.5rem;
+  color: #b91c1c;
+}
+
+.error-message svg {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.error-message p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .race-checker-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .race-checker-title {
+    font-size: 1.5rem;
+  }
+  
+  .race-checker-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .upload-area {
+    padding: 2rem 1rem;
+  }
+  
+  .image-preview {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .race-checker-footer {
+    padding: 1rem;
+  }
+}

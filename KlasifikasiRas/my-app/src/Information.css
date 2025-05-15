@@ -1,0 +1,211 @@
+/* Information Page Styles */
+
+.information-page {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+/* Hero Section */
+.info-hero-section {
+  background-color: #f8fafc;
+  padding: 80px 0 60px;
+  text-align: center;
+}
+
+.info-hero-section .section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+.info-subtitle {
+  font-size: 1.25rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Information Sections */
+.info-section {
+  padding: 80px 0;
+}
+
+.info-section-alt {
+  background-color: #f8fafc;
+}
+
+.info-heading {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 32px;
+  color: #1e293b;
+  text-align: center;
+}
+
+.info-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-content p {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  color: #475569;
+}
+
+/* How to Use Cards */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.info-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+}
+
+.info-card-number {
+  background-color: #2563eb;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0 auto 24px;
+}
+
+.info-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+.info-card-description {
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.info-card-action {
+  margin-top: 24px;
+}
+
+/* Stats */
+.info-stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 48px;
+  margin: 48px 0;
+}
+
+.info-stat {
+  text-align: center;
+}
+
+.info-stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.info-stat-label {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* FAQs */
+.info-faqs {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-faq {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-faq:last-child {
+  border-bottom: none;
+}
+
+.info-faq-question {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+.info-faq-answer {
+  color: #475569;
+  line-height: 1.7;
+}
+
+/* Disclaimer */
+.info-disclaimer {
+  background-color: #eff6ff;
+}
+
+.info-disclaimer .info-content p {
+  font-size: 1.125rem;
+}
+
+/* Contact Section */
+.info-contact {
+  text-align: center;
+}
+
+.info-contact-text {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  color: #475569;
+  font-size: 1.125rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .info-hero-section {
+    padding: 60px 0 40px;
+  }
+  
+  .info-section {
+    padding: 60px 0;
+  }
+  
+  .info-hero-section .section-title {
+    font-size: 2rem;
+  }
+  
+  .info-heading {
+    font-size: 1.75rem;
+  }
+  
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-stats {
+    gap: 24px;
+  }
+}
