@@ -8,25 +8,25 @@ function Information() {
       {/* Hero Section */}
       <section className="info-hero-section">
         <div className="container">
-          <h1 className="section-title">About RaceAI</h1>
-          <p className="info-subtitle">Understanding our technology and how to use it</p>
+          <h1 className="section-title">Tentang RaceAI</h1>
+          <p className="info-subtitle">Memahami teknologi kami dan cara menggunakannya</p>
         </div>
       </section>
 
       {/* About the Project */}
       <section className="info-section">
         <div className="container">
-          <h2 className="info-heading">Our Mission</h2>
+          <h2 className="info-heading">Misi Kami</h2>
           <div className="info-content">
             <p>
-              RaceAI is an educational platform that explores facial diversity across different racial backgrounds using 
-              artificial intelligence. Our mission is to provide researchers, students, and AI enthusiasts with tools 
-              to better understand facial characteristics across populations while promoting diversity awareness.
+              RaceAI adalah platform pendidikan yang mengeksplorasi keragaman wajah di berbagai latar belakang ras menggunakan 
+              kecerdasan buatan. Misi kami adalah menyediakan alat bagi para peneliti, mahasiswa, dan penggemar AI 
+              untuk lebih memahami karakteristik wajah di seluruh populasi sambil mempromosikan kesadaran akan keragaman.
             </p>
             <p>
-              We've developed a comprehensive dataset containing facial images from diverse racial backgrounds, 
-              which powers our AI-driven race detection tool. This technology demonstrates how machine learning 
-              can identify patterns in facial structures and features associated with different ethnic groups.
+              Kami telah mengembangkan dataset komprehensif yang berisi gambar wajah dari beragam latar belakang ras, 
+              yang mendukung alat pendeteksi ras berbasis AI kami. Teknologi ini menunjukkan bagaimana pembelajaran mesin 
+              dapat mengidentifikasi pola dalam struktur dan fitur wajah yang terkait dengan kelompok etnis yang berbeda.
             </p>
           </div>
         </div>
@@ -35,30 +35,30 @@ function Information() {
       {/* How to Use */}
       <section className="info-section info-section-alt">
         <div className="container">
-          <h2 className="info-heading">How to Use RaceAI</h2>
+          <h2 className="info-heading">Bagaimana cara menggunakan RaceAI</h2>
           <div className="info-cards">
             <div className="info-card">
               <div className="info-card-number">1</div>
-              <h3 className="info-card-title">Visit the Race Checker</h3>
+              <h3 className="info-card-title">Kunjungi Cek Ras</h3>
               <p className="info-card-description">
-                Navigate to the "Check Your Race" page using the navigation menu or the button on the homepage.
+                Buka halaman "Cek Ras" dengan menggunakan menu navigasi atau tombol pada halaman beranda.
               </p>
               <div className="info-card-action">
-                <Link to="/check-race" className="button primary-button">Go to Race Checker</Link>
+                <Link to="/check-race" className="button primary-button">Pergi ke Cek Ras</Link>
               </div>
             </div>
             <div className="info-card">
               <div className="info-card-number">2</div>
-              <h3 className="info-card-title">Upload Your Photo</h3>
+              <h3 className="info-card-title">Upload Foto</h3>
               <p className="info-card-description">
-                Click the upload button to select a clear, front-facing photo. The image should show your face clearly without obstructions.
+                Klik tombol unggah untuk memilih foto yang jelas dan menghadap ke depan. Gambar harus menunjukkan wajah anda dengan jelas tanpa halangan.
               </p>
             </div>
             <div className="info-card">
               <div className="info-card-number">3</div>
-              <h3 className="info-card-title">Analyze Results</h3>
+              <h3 className="info-card-title">Hasil Analisa</h3>
               <p className="info-card-description">
-                Our AI will process your image and display the detected race categories along with confidence percentages.
+                AI kami akan memproses gambar anda dan menampilkan kategori ras yang terdeteksi bersama dengan persentase kepercayaan.
               </p>
             </div>
           </div>

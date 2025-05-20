@@ -22,10 +22,10 @@ function HomePage() {
               </p>
               <div className="button-group">
                 <Link to="/check-race" className="button primary-button">
-                  Try Race Checker
+                  Coba Cek Ras!
                 </Link>
                 <Link to="/information" className="button secondary-button">
-                  Learn More
+                  Pelajari lebih lanjut
                 </Link>
               </div>
             </div>
@@ -42,7 +42,7 @@ function HomePage() {
       {/* Dataset Features */}
       <section className="features-section">
         <div className="container">
-          <h2 className="section-title">About The Dataset</h2>
+          <h2 className="section-title">Tentang Dataset</h2>
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon database-icon">
@@ -52,9 +52,9 @@ function HomePage() {
                   <path d="M21 16C21 18.88 16.97 20 12 20C7.03 20 3 18.88 3 16V10" stroke="currentColor" strokeWidth="2"/>
                 </svg>
               </div>
-              <h3 className="feature-title">Comprehensive Collection</h3>
+              <h3 className="feature-title">Koleksi Komprehensif</h3>
               <p className="feature-description">
-                Lebih dari 100,000 gambar wajah yang mewakili latar belakang ras yang beragam
+                Lebih dari 100,000 gambar wajah yang mewakili latar belakang ras yang beragam.
               </p>
             </div>
             <div className="feature-card">
@@ -64,9 +64,9 @@ function HomePage() {
                   <path d="M12 2L12 12L17 17" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </div>
-              <h3 className="feature-title">Balanced Distribution</h3>
+              <h3 className="feature-title">Distribusi yang Seimbang</h3>
               <p className="feature-description">
-                Representasi yang setara di berbagai kategori ras
+                Representasi yang setara di berbagai kategori ras.
               </p>
             </div>
             <div className="feature-card">
@@ -76,9 +76,9 @@ function HomePage() {
                   <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </div>
-              <h3 className="feature-title">High Accuracy</h3>
+              <h3 className="feature-title">Akurasi yang Tinggi</h3>
               <p className="feature-description">
-                Professionally validated and verified
+                Divalidasi dan diverifikasi secara profesional.
               </p>
             </div>
           </div>
@@ -88,16 +88,16 @@ function HomePage() {
       {/* Race Categories */}
       <section className="categories-section">
         <div className="container">
-          <h2 className="section-title">Race Categories</h2>
+          <h2 className="section-title">Kategori Ras</h2>
           <div className="categories-grid">
             <div className="category-card">
               <div className="category-image">
                 <img src={asian} alt="East Asian" />
               </div>
               <div className="category-content">
-                <h3 className="category-title">East Asian</h3>
+                <h3 className="category-title">Asia Timur</h3>
                 <p className="category-description">
-                  Including Chinese, Japanese, Korean, and related groups
+                  Termasuk kelompok Tionghoa, Jepang, Korea, dan kelompok terkait.
                 </p>
               </div>
             </div>
@@ -106,9 +106,9 @@ function HomePage() {
                 <img src={southAsian} alt="South Asian" />
               </div>
               <div className="category-content">
-                <h3 className="category-title">South Asian</h3>
+                <h3 className="category-title">Asia Selatan</h3>
                 <p className="category-description">
-                  Including Indian, Pakistani, Bangladeshi, and related groups
+                  Termasuk India, Pakistan, Bangladesh, dan kelompok terkait.
                 </p>
               </div>
             </div>
@@ -117,9 +117,9 @@ function HomePage() {
                 <img src={white} alt="White" />
               </div>
               <div className="category-content">
-                <h3 className="category-title">White</h3>
+                <h3 className="category-title">Putih</h3>
                 <p className="category-description">  
-                  Including European, American, and related groups
+                  Termasuk Eropa, Amerika, dan kelompok terkait.
                 </p>
               </div>
             </div>
@@ -146,9 +146,9 @@ function App() {
             <span>RaceAI</span>
           </div>
           <nav className="nav">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/check-race" className="nav-link">Check Your Race</Link>
-            <Link to="/information" className="nav-link">Information</Link>
+            <Link to="/" className="nav-link">Beranda</Link>
+            <Link to="/check-race" className="nav-link">Cek Ras</Link>
+            <Link to="/information" className="nav-link">Informasi</Link>
           </nav>
         </div>
       </header>
@@ -174,28 +174,28 @@ function App() {
                 <span>RaceAI</span>
               </div>
               <p className="footer-text">
-                Exploring racial diversity through artificial intelligence
+                Menjelajahi keragaman ras melalui kecerdasan buatan.
               </p>
             </div>
             <div className="footer-column">
-              <h3 className="footer-title">Quick Links</h3>
+              <h3 className="footer-title">Tautan Cepat</h3>
               <ul className="footer-links">
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/information">Information</Link></li>
-                <li><Link to="/check-race">Race Checker</Link></li>
+                <li><Link to="/">Beranda</Link></li>
+                <li><Link to="/information">Informasi</Link></li>
+                <li><Link to="/check-race">Cek Ras</Link></li>
               </ul>
             </div>
             <div className="footer-column">
-              <h3 className="footer-title">Resources</h3>
+              <h3 className="footer-title">Sumber</h3>
               <ul className="footer-links">
-                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Dokumentasi</a></li>
                 <li><a href="#">API</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Kebijakan Privasi</a></li>
+                <li><a href="#">Ketentuan Layanan</a></li>
               </ul>
             </div>
             <div className="footer-column">
-              <h3 className="footer-title">Connect</h3>
+              <h3 className="footer-title">Hubungkan</h3>
               <div className="social-links">
                 <a href="#" className="social-icon twitter-icon">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
