@@ -8,45 +8,45 @@ import io
 import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)  # Mengaktifkan CORS untuk semua rute
 
-# Load the CNN model for ethnicity analysis
-model_path = "./fairface_inception_model1.h5"  # Update with your actual model path
+# Memuat model CNN untuk analisis etnisitas
+model_path = "./fairface_inception_model1.h5"  # Perbarui dengan path model yang benar
 model = tf.keras.models.load_model(model_path)
 
-# Load YOLO model
+# Memuat model YOLO
 def load_yolo():
     net = cv2.dnn.readNetFromDarknet('yolov4.cfg', 'yolov4.weights')
     
-    # Get output layers
+    # Mendapatkan layer output
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers().flatten()]
     
-    # Load COCO class names
+    # Memuat nama-nama kelas COCO
     with open('coco.names', 'r') as f:
         classes = f.read().strip().split('\n')
     
     return net, output_layers, classes
 
-# Detect persons in image using YOLO
+# Deteksi orang dalam gambar menggunakan YOLO
 def detect_persons(image_bytes):
     try:
-        # Load image
+        # Memuat gambar
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         img_array = np.array(img)
         height, width = img_array.shape[:2]
         
-        # Load YOLO
+        # Memuat YOLO
         net, output_layers, classes = load_yolo()
         
-        # Prepare image for YOLO
+        # Menyiapkan gambar untuk YOLO
         blob = cv2.dnn.blobFromImage(img_array, 1/255.0, (416, 416), swapRB=True, crop=False)
         net.setInput(blob)
         
-        # Run detection
+        # Menjalankan deteksi
         outputs = net.forward(output_layers)
         
-        # Process detections
+        # Memproses hasil deteksi
         boxes = []
         confidences = []
         class_ids = []
@@ -57,15 +57,13 @@ def detect_persons(image_bytes):
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
                 
-                # Filter for persons (class_id 0 in COCO) with good confidence
-                if class_id == 0 and confidence > 0.5:  # 0 is the class ID for person in COCO
-                    # YOLO returns normalized coordinates
+                # Memfilter hanya untuk orang (class_id 0 dalam COCO) dengan confidence tinggi
+                if class_id == 0 and confidence > 0.5:
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
                     w = int(detection[2] * width)
                     h = int(detection[3] * height)
                     
-                    # Calculate top-left corner
                     x = int(center_x - w / 2)
                     y = int(center_y - h / 2)
                     
@@ -73,14 +71,12 @@ def detect_persons(image_bytes):
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
         
-        # Apply non-max suppression
         indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
         
         persons = []
         if len(indices) > 0:
             for i in indices.flatten():
                 x, y, w, h = boxes[i]
-                # Ensure coordinates are within image bounds
                 x = max(0, x)
                 y = max(0, y)
                 x_max = min(width, x + w)
@@ -88,9 +84,8 @@ def detect_persons(image_bytes):
                 w = x_max - x
                 h = y_max - y
                 
-                # Extract person ROI
                 person_img = img_array[y:y_max, x:x_max]
-                if person_img.size > 0:  # Check if ROI is not empty
+                if person_img.size > 0:
                     persons.append({
                         'box': [x, y, w, h],
                         'confidence': confidences[i],
@@ -100,10 +95,10 @@ def detect_persons(image_bytes):
         return persons, img_array
     
     except Exception as e:
-        print(f"Error in detect_persons: {e}")
+        print(f"Kesalahan dalam detect_persons: {e}")
         return [], None
 
-# Preprocess image function for ethnicity model
+# Pra-pemrosesan gambar untuk model etnisitas
 def preprocess_image(img_array):
     try:
         img_resized = cv2.resize(img_array, (224, 224))
@@ -111,134 +106,70 @@ def preprocess_image(img_array):
         img_batch = np.expand_dims(img_normalized, axis=0)
         return img_batch
     except Exception as e:
-        print(f"Error in preprocess_image: {e}")
+        print(f"Kesalahan dalam preprocess_image: {e}")
         raise
 
-# Extract facial features
-def extract_facial_features(img_array):
-    try:
-        # Load face detector
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        
-        # Convert to grayscale for face detection
-        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-        
-        # Detect faces
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-        
-        if len(faces) == 0:
-            return {
-                "eye_shape": "Not detected",
-                "nose_structure": "Not detected",
-                "facial_structure": "Not detected"
-            }
-        
-        # For simplicity, process just the first face
-        (x, y, w, h) = faces[0]
-        
-        # Simple feature extraction
-        face_height = h
-        face_width = w
-        face_ratio = face_width / face_height
-        
-        # Simple deterministic rules for features
-        if face_ratio > 0.8:
-            facial_structure = "Round"
-        elif face_ratio < 0.7:
-            facial_structure = "Oval"
-        else:
-            facial_structure = "Square with defined jawline"
-            
-        return {
-            "eye_shape": "Almond",  # This would be determined using eye landmarks
-            "nose_structure": "Medium, straight",  # This would be determined using nose landmarks
-            "facial_structure": facial_structure
-        }
-        
-    except Exception as e:
-        print(f"Error extracting facial features: {e}")
-        return {
-            "eye_shape": "Analysis failed",
-            "nose_structure": "Analysis failed",
-            "facial_structure": "Analysis failed"
-        }
 
-# Analyze a single person
+# Analisis satu orang
 def analyze_person(person_img):
     try:
-        # Preprocess the person image for ethnicity model
         processed_image = preprocess_image(person_img)
-        
-        # Make prediction with the model
         predictions = model.predict(processed_image)[0]
         
-        # Extract facial features
-        facial_features = extract_facial_features(person_img)
         
-        # Using the correct ethnicity classes from your model
         ethnicity_classes = ['Black', 'East Asian', 'White', 'Indian', 'Latino_Hispanic', 'Middle Eastern', 'Southeast Asian']
         
-        # Create response with predictions
         result = {
             'predictions': {
                 ethnicity_classes[i]: float(predictions[i]) 
                 for i in range(min(len(ethnicity_classes), len(predictions)))
             },
-            'confidence': float(np.max(predictions)),  # Overall confidence
-            'facial_features': facial_features,
+            'confidence': float(np.max(predictions)),
+           
             'details': {
-                'Black': 'African/Black features detected' if predictions[0] > 0.3 else 'Minimal African/Black features',
-                'East Asian': 'East Asian features detected' if predictions[1] > 0.3 else 'Minimal East Asian features',
-                'White': 'European/White features detected' if predictions[2] > 0.3 else 'Minimal European/White features',
-                'Indian': 'Indian features detected' if predictions[3] > 0.3 else 'Minimal Indian features',
-                'Latino_Hispanic': 'Latino/Hispanic features detected' if predictions[4] > 0.3 else 'Minimal Latino/Hispanic features',
-                'Middle Eastern': 'Middle Eastern features detected' if predictions[5] > 0.3 else 'Minimal Middle Eastern features',
-                'Southeast Asian': 'Southeast Asian features detected' if predictions[6] > 0.3 else 'Minimal Southeast Asian features'
+                'Black': 'Fitur Afrika/Kulit hitam terdeteksi' if predictions[0] > 0.3 else 'Fitur Afrika/Kulit hitam minimal',
+                'East Asian': 'Fitur Asia Timur terdeteksi' if predictions[1] > 0.3 else 'Fitur Asia Timur minimal',
+                'White': 'Fitur Eropa/Kulit putih terdeteksi' if predictions[2] > 0.3 else 'Fitur Eropa/Kulit putih minimal',
+                'Indian': 'Fitur India terdeteksi' if predictions[3] > 0.3 else 'Fitur India minimal',
+                'Latino_Hispanic': 'Fitur Latino/Hispanik terdeteksi' if predictions[4] > 0.3 else 'Fitur Latino/Hispanik minimal',
+                'Middle Eastern': 'Fitur Timur Tengah terdeteksi' if predictions[5] > 0.3 else 'Fitur Timur Tengah minimal',
+                'Southeast Asian': 'Fitur Asia Tenggara terdeteksi' if predictions[6] > 0.3 else 'Fitur Asia Tenggara minimal'
             }
         }
         
         return result
     except Exception as e:
-        print(f"Error analyzing person: {e}")
+        print(f"Kesalahan saat menganalisis orang: {e}")
         return {'error': str(e)}
 
 @app.route('/api/analyze-ethnicity', methods=['POST'])
 def analyze_ethnicity():
     if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
+        return jsonify({'error': 'Tidak ada gambar yang dikirim'}), 400
     
     file = request.files['image']
     
     if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        return jsonify({'error': 'Tidak ada file yang dipilih'}), 400
     
     try:
-        # Read the image file
         image_bytes = file.read()
-        
-        # Detect persons in the image using YOLO
         persons, original_img = detect_persons(image_bytes)
         
-        # If no persons detected
         if len(persons) == 0:
             return jsonify({
-                'error': 'No persons detected in the image',
+                'error': 'Tidak ada orang yang terdeteksi dalam gambar',
                 'persons_count': 0
             }), 400
         
-        # Analyze each detected person
         results = []
         for i, person in enumerate(persons):
             person_result = analyze_person(person['image'])
-            
-            # Add person metadata
-            person_result['box'] = person['box']  # [x, y, width, height]
+            person_result['box'] = person['box']
             person_result['person_id'] = i + 1
             person_result['detection_confidence'] = person['confidence']
-            
             results.append(person_result)
         
-        # Return results for all detected persons
         return jsonify({
             'persons_count': len(results),
             'results': results

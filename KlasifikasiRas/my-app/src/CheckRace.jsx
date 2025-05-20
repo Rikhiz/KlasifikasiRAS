@@ -25,13 +25,13 @@ function CheckRace() {
     
     // Validate file type
     if (!selectedFile.type.startsWith('image/')) {
-      setError('Please upload a valid image file (JPG, PNG)');
+      setError('Silakan unggah file gambar yang valid (JPG, PNG)');
       return;
     }
     
     // Validate file size (5MB max)
     if (selectedFile.size > 5 * 1024 * 1024) {
-      setError('File size should not exceed 5MB');
+      setError('Ukuran file tidak boleh melebihi 5MB');
       return;
     }
     
@@ -43,7 +43,7 @@ function CheckRace() {
       setPreview(e.target.result);
     };
     reader.onerror = () => {
-      setError('Error reading file');
+      setError('Error membaca file');
     };
     reader.readAsDataURL(selectedFile);
   };
@@ -104,7 +104,7 @@ function CheckRace() {
       const data = await response.json();
       
       if (data.persons_count === 0) {
-        setError('No persons detected in the image');
+        setError('Tidak ada orang yang terdeteksi dalam gambar');
         return;
       }
       
@@ -114,7 +114,7 @@ function CheckRace() {
       
     } catch (err) {
       console.error('Error analyzing image:', err);
-      setError(err.message || 'Failed to analyze image. Please try again later.');
+      setError(err.message || 'Gagal menganalisis gambar. Silakan coba lagi nanti.');
     } finally {
       setIsLoading(false);
     }
@@ -133,39 +133,39 @@ function CheckRace() {
     
     return [
       { 
-        name: 'Black', 
+        name: 'Negro/Hitam', 
         probability: personData.predictions.Black || 0, 
-        details: personData.details?.Black || 'Black features analysis' 
+        details: personData.details?.Black || 'Analisis fitur ras Negro/Hitam' 
       },
       { 
-        name: 'East Asian', 
+        name: 'Asia Timur', 
         probability: personData.predictions['East Asian'] || 0, 
-        details: personData.details?.['East Asian'] || 'East Asian features analysis' 
+        details: personData.details?.['East Asian'] || 'Analisis fitur ras Asia Timur' 
       },
       { 
-        name: 'White', 
+        name: 'Kaukasia', 
         probability: personData.predictions.White || 0, 
-        details: personData.details?.White || 'White features analysis' 
+        details: personData.details?.White || 'Analisis fitur ras Kaukasia' 
       },
       { 
-        name: 'Indian', 
+        name: 'India', 
         probability: personData.predictions.Indian || 0, 
-        details: personData.details?.Indian || 'Indian features analysis' 
+        details: personData.details?.Indian || 'Analisis fitur ras India' 
       },
       { 
-        name: 'Latino/Hispanic', 
+        name: 'Latin/Hispanik', 
         probability: personData.predictions.Latino_Hispanic || 0, 
-        details: personData.details?.Latino_Hispanic || 'Latino/Hispanic features analysis' 
+        details: personData.details?.Latino_Hispanic || 'Analisis fitur ras Latin/Hispanik' 
       },
       { 
-        name: 'Middle Eastern', 
+        name: 'Timur Tengah', 
         probability: personData.predictions['Middle Eastern'] || 0, 
-        details: personData.details?.['Middle Eastern'] || 'Middle Eastern features analysis' 
+        details: personData.details?.['Middle Eastern'] || 'Analisis fitur ras Timur Tengah' 
       },
       { 
-        name: 'Southeast Asian', 
+        name: 'Asia Tenggara', 
         probability: personData.predictions['Southeast Asian'] || 0, 
-        details: personData.details?.['Southeast Asian'] || 'Southeast Asian features analysis' 
+        details: personData.details?.['Southeast Asian'] || 'Analisis fitur ras Asia Tenggara' 
       }
     ];
   };
@@ -176,7 +176,7 @@ function CheckRace() {
     
     return (
       <div className="person-boxes-container" style={{ position: 'relative' }}>
-        <img src={preview} alt="Preview" className="preview-image" />
+        <img src={preview} alt="Pratinjau" className="preview-image" />
         
         {results.results.map((person) => {
           const [x, y, w, h] = person.box;
@@ -211,7 +211,7 @@ function CheckRace() {
                   fontSize: '12px'
                 }}
               >
-                Person {person.person_id}
+                Orang {person.person_id}
               </div>
             </div>
           );
@@ -226,9 +226,9 @@ function CheckRace() {
     <div className="race-checker-container">
       <div className="race-checker-card">
         <div className="race-checker-header">
-          <h1 className="race-checker-title">Facial Ethnicity & Person Analysis</h1>
+          <h1 className="race-checker-title">Analisis Etnis Wajah & Identifikasi Orang</h1>
           <p className="race-checker-subtitle">
-            Our advanced AI detects people using YOLOv4 and analyzes facial features to determine ethnic composition
+            AI canggih kami mendeteksi orang menggunakan YOLOv4 dan menganalisis fitur wajah untuk menentukan komposisi etnis
           </p>
         </div>
         
@@ -244,10 +244,10 @@ function CheckRace() {
                 <Upload size={40} />
               </div>
               <div className="upload-text">
-                <p className="upload-primary-text">Drag and drop your image here</p>
-                <p className="upload-secondary-text">or</p>
+                <p className="upload-primary-text">Tarik dan letakkan gambar Anda di sini</p>
+                <p className="upload-secondary-text">atau</p>
                 <label htmlFor="upload-photo" className="upload-button">
-                  Choose File
+                  Pilih File
                   <input 
                     id="upload-photo" 
                     type="file" 
@@ -257,7 +257,7 @@ function CheckRace() {
                   />
                 </label>
               </div>
-              <p className="upload-formats">Supported formats: JPG, PNG (max 5MB)</p>
+              <p className="upload-formats">Format yang didukung: JPG, PNG (maksimal 5MB)</p>
             </div>
           ) : (
             <div className="analysis-container">
@@ -266,7 +266,7 @@ function CheckRace() {
                   <div className="image-preview">
                     <img 
                       src={preview} 
-                      alt="Preview" 
+                      alt="Pratinjau" 
                       className="preview-image" 
                     />
                   </div>
@@ -276,9 +276,9 @@ function CheckRace() {
                   <button 
                     className="remove-image-button" 
                     onClick={clearImage}
-                    aria-label="Remove image"
+                    aria-label="Hapus gambar"
                   >
-                    <X size={16} /> Remove
+                    <X size={16} /> Hapus
                   </button>
                 </div>
                 
@@ -287,7 +287,7 @@ function CheckRace() {
                     className="analyze-button"
                     onClick={analyzeImage}
                   >
-                    Detect People & Analyze <ChevronRight size={18} />
+                    Deteksi Orang & Analisis <ChevronRight size={18} />
                   </button>
                 )}
               </div>
@@ -295,7 +295,7 @@ function CheckRace() {
               {isLoading && (
                 <div className="loading-container">
                   <Loader className="loading-spinner" size={40} />
-                  <p className="loading-text">Detecting people and analyzing facial features...</p>
+                  <p className="loading-text">Mendeteksi orang dan menganalisis fitur wajah...</p>
                   <div className="progress-bar">
                     <div className="progress-fill"></div>
                   </div>
@@ -307,7 +307,7 @@ function CheckRace() {
                   <div className="results-header">
                     <div className="person-summary">
                       <User size={18} />
-                      <span>{results.persons_count} {results.persons_count === 1 ? 'person' : 'people'} detected</span>
+                      <span>{results.persons_count} {results.persons_count === 1 ? 'orang' : 'orang'} terdeteksi</span>
                       {results.persons_count > 1 && (
                         <select 
                           value={selectedPerson} 
@@ -316,7 +316,7 @@ function CheckRace() {
                         >
                           {results.results.map(person => (
                             <option key={person.person_id} value={person.person_id}>
-                              Person {person.person_id}
+                              Orang {person.person_id}
                             </option>
                           ))}
                         </select>
@@ -327,10 +327,10 @@ function CheckRace() {
                         <Check size={16} />
                       </div>
                       <div>
-                        <p>Detection confidence: {Math.round(selectedData.detection_confidence * 100)}%</p>
-                        <p>Analysis confidence: {Math.round(selectedData.confidence * 100)}%</p>
+                        <p>Kepercayaan deteksi: {Math.round(selectedData.detection_confidence * 100)}%</p>
+                        <p>Kepercayaan analisis: {Math.round(selectedData.confidence * 100)}%</p>
                         <p>
-                          Dominant Ethnicity: <strong>
+                          Etnis Dominan: <strong>
                             {formatEthnicGroups(selectedData)
                               .reduce((max, group) => group.probability > max.probability ? group : max, {probability: 0})
                               .name}
@@ -341,7 +341,7 @@ function CheckRace() {
                   </div>
                   
                   <div className="ethnic-distribution">
-                    <h3 className="results-section-title">Ethnic Distribution</h3>
+                    <h3 className="results-section-title">Distribusi Etnis</h3>
 
                     {formatEthnicGroups(selectedData)
                       .sort((a, b) => b.probability - a.probability)
@@ -362,28 +362,12 @@ function CheckRace() {
                       ))}
                   </div>
                   
-                  <div className="facial-features">
-                    <h3 className="results-section-title">Detected Facial Characteristics</h3>
-                    <div className="features-grid">
-                      <div className="feature">
-                        <span className="feature-label">Eye Shape:</span>
-                        <span className="feature-value">{selectedData.facial_features?.eye_shape || "Not analyzed"}</span>
-                      </div>
-                      <div className="feature">
-                        <span className="feature-label">Nose Structure:</span>
-                        <span className="feature-value">{selectedData.facial_features?.nose_structure || "Not analyzed"}</span>
-                      </div>
-                      <div className="feature">
-                        <span className="feature-label">Facial Structure:</span>
-                        <span className="feature-value">{selectedData.facial_features?.facial_structure || "Not analyzed"}</span>
-                      </div>
-                    </div>
-                  </div>
+                 
                   
                   <div className="results-disclaimer">
                     <AlertCircle size={14} />
                     <p>
-                      Results are for informational purposes only. Ethnicity is complex and goes beyond physical appearance.
+                      Hasil hanya untuk tujuan informasi. Etnis adalah hal yang kompleks dan lebih dari sekadar tampilan fisik.
                     </p>
                   </div>
                   
@@ -391,7 +375,7 @@ function CheckRace() {
                     className="new-analysis-button"
                     onClick={clearImage}
                   >
-                    New Analysis
+                    Analisis Baru
                   </button>
                 </div>
               )}
@@ -407,7 +391,7 @@ function CheckRace() {
         )}
         
         <div className="race-checker-footer">
-          <p>Privacy note: Images are not stored on our servers and are processed securely.</p>
+          <p>Catatan privasi: Gambar tidak disimpan di server kami dan diproses dengan aman.</p>
         </div>
       </div>
     </div>
