@@ -16,23 +16,16 @@ model = tf.keras.models.load_model(model_path)
 
 # Preprocess image function
 def preprocess_image(image_bytes):
-    # Convert bytes to image
-    img = Image.open(io.BytesIO(image_bytes))
-    
-    # Convert to numpy array
-    img_array = np.array(img)
-    
-    # Resize image to the size your model was trained on
-    # Update these dimensions to match your model's expected input size
-    img_resized = cv2.resize(img_array, (224, 224))
-    
-    # Normalize pixel values
-    img_normalized = img_resized / 255.0
-    
-    # Add batch dimension
-    img_batch = np.expand_dims(img_normalized, axis=0)
-    
-    return img_batch
+    try:
+        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")  # memastikan 3 channel
+        img_array = np.array(img)
+        img_resized = cv2.resize(img_array, (224, 224))
+        img_normalized = img_resized / 255.0
+        img_batch = np.expand_dims(img_normalized, axis=0)
+        return img_batch
+    except Exception as e:
+        print(f"Error in preprocess_image: {e}")
+        raise
 
 # Extract facial features - you can expand this based on your specific model's capabilities
 def extract_facial_features(image_bytes):
@@ -44,12 +37,9 @@ def extract_facial_features(image_bytes):
         # Load face detector
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         
-        # Convert bytes to image
-        img = Image.open(io.BytesIO(image_bytes))
+        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         img_array = np.array(img)
-        
-        # Convert to grayscale for face detection
-        gray = cv2.cvtColor(img_array, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
         
         # Detect faces
         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
