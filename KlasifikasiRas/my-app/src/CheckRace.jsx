@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Upload, X, ChevronRight, AlertCircle, Check, Loader } from 'lucide-react';
+import { Upload, X, ChevronRight, AlertCircle, Check, Loader, User } from 'lucide-react';
 import './CheckRace.css';
 
 function CheckRace() {
@@ -9,6 +9,7 @@ function CheckRace() {
   const [error, setError] = useState(null);
   const [results, setResults] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
   
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -17,6 +18,8 @@ function CheckRace() {
   
   const processFile = (selectedFile) => {
     setError(null);
+    setResults(null);
+    setSelectedPerson(null);
     
     if (!selectedFile) return;
     
@@ -71,6 +74,7 @@ function CheckRace() {
     setFile(null);
     setPreview(null);
     setResults(null);
+    setSelectedPerson(null);
   };
   
   const analyzeImage = async () => {
@@ -78,88 +82,153 @@ function CheckRace() {
     
     setIsLoading(true);
     setResults(null);
+    setSelectedPerson(null);
     
     try {
       // Create FormData to send the image file
       const formData = new FormData();
       formData.append('image', file);
       
-      // Replace with your actual API endpoint where the Python CNN model is hosted
+      // API endpoint where the Python backend with YOLO is hosted
       const response = await fetch('http://localhost:5000/api/analyze-ethnicity', {
         method: 'POST',
         body: formData,
       });
       
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Error: ${response.status}`);
       }
       
       // Parse the response from your Python backend
       const data = await response.json();
       
-      // Format the results based on your model's output
-      setResults({
-        ethnicGroups: [
-          { 
-            name: 'Black', 
-            probability: data.predictions.Black || 0, 
-            details: data.details?.Black || 'Black features analysis' 
-          },
-          { 
-            name: 'East Asian', 
-            probability: data.predictions['East Asian'] || 0, 
-            details: data.details?.['East Asian'] || 'East Asian features analysis' 
-          },
-          { 
-            name: 'White', 
-            probability: data.predictions.White || 0, 
-            details: data.details?.White || 'White features analysis' 
-          },
-          { 
-            name: 'Indian', 
-            probability: data.predictions.Indian || 0, 
-            details: data.details?.Indian || 'Indian features analysis' 
-          },
-          { 
-            name: 'Latino/Hispanic', 
-            probability: data.predictions.Latino_Hispanic || 0, 
-            details: data.details?.Latino_Hispanic || 'Latino/Hispanic features analysis' 
-          },
-          { 
-            name: 'Middle Eastern', 
-            probability: data.predictions['Middle Eastern'] || 0, 
-            details: data.details?.['Middle Eastern'] || 'Middle Eastern features analysis' 
-          },
-          { 
-            name: 'Southeast Asian', 
-            probability: data.predictions['Southeast Asian'] || 0, 
-            details: data.details?.['Southeast Asian'] || 'Southeast Asian features analysis' 
-          }
-        ],
-        confidence: data.confidence || 0.8,
-        analysis: {
-          facialFeatures: {
-            eyeShape: data.facial_features?.eye_shape || 'Not analyzed',
-            noseStructure: data.facial_features?.nose_structure || 'Not analyzed',
-            facialStructure: data.facial_features?.facial_structure || 'Not analyzed'
-          }
-        }
-      });
+      if (data.persons_count === 0) {
+        setError('No persons detected in the image');
+        return;
+      }
+      
+      // Set results and select the first person by default
+      setResults(data);
+      setSelectedPerson(data.results[0].person_id);
+      
     } catch (err) {
       console.error('Error analyzing image:', err);
-      setError('Failed to analyze image. Please try again later.');
+      setError(err.message || 'Failed to analyze image. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   };
   
+  // Get data for the currently selected person
+  const getSelectedPersonData = () => {
+    if (!results || !selectedPerson) return null;
+    
+    return results.results.find(person => person.person_id === selectedPerson);
+  };
+  
+  // Format ethnic group data for the selected person
+  const formatEthnicGroups = (personData) => {
+    if (!personData || !personData.predictions) return [];
+    
+    return [
+      { 
+        name: 'Black', 
+        probability: personData.predictions.Black || 0, 
+        details: personData.details?.Black || 'Black features analysis' 
+      },
+      { 
+        name: 'East Asian', 
+        probability: personData.predictions['East Asian'] || 0, 
+        details: personData.details?.['East Asian'] || 'East Asian features analysis' 
+      },
+      { 
+        name: 'White', 
+        probability: personData.predictions.White || 0, 
+        details: personData.details?.White || 'White features analysis' 
+      },
+      { 
+        name: 'Indian', 
+        probability: personData.predictions.Indian || 0, 
+        details: personData.details?.Indian || 'Indian features analysis' 
+      },
+      { 
+        name: 'Latino/Hispanic', 
+        probability: personData.predictions.Latino_Hispanic || 0, 
+        details: personData.details?.Latino_Hispanic || 'Latino/Hispanic features analysis' 
+      },
+      { 
+        name: 'Middle Eastern', 
+        probability: personData.predictions['Middle Eastern'] || 0, 
+        details: personData.details?.['Middle Eastern'] || 'Middle Eastern features analysis' 
+      },
+      { 
+        name: 'Southeast Asian', 
+        probability: personData.predictions['Southeast Asian'] || 0, 
+        details: personData.details?.['Southeast Asian'] || 'Southeast Asian features analysis' 
+      }
+    ];
+  };
+  
+  // Draw person boxes on the preview image
+  const renderPersonBoxes = () => {
+    if (!results || !results.results || results.results.length === 0) return null;
+    
+    return (
+      <div className="person-boxes-container" style={{ position: 'relative' }}>
+        <img src={preview} alt="Preview" className="preview-image" />
+        
+        {results.results.map((person) => {
+          const [x, y, w, h] = person.box;
+          const isSelected = selectedPerson === person.person_id;
+          
+          return (
+            <div 
+              key={person.person_id}
+              className={`person-box ${isSelected ? 'selected' : ''}`}
+              style={{
+                position: 'absolute',
+                left: `${x}px`,
+                top: `${y}px`,
+                width: `${w}px`,
+                height: `${h}px`,
+                border: `2px solid ${isSelected ? '#4CAF50' : '#FFA500'}`,
+                cursor: 'pointer',
+                boxSizing: 'border-box'
+              }}
+              onClick={() => setSelectedPerson(person.person_id)}
+            >
+              <div 
+                className="person-label" 
+                style={{
+                  position: 'absolute',
+                  top: '-25px',
+                  left: '0',
+                  background: isSelected ? '#4CAF50' : '#FFA500',
+                  color: 'white',
+                  padding: '2px 6px',
+                  borderRadius: '3px',
+                  fontSize: '12px'
+                }}
+              >
+                Person {person.person_id}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  
+  const selectedData = getSelectedPersonData();
+  
   return (
     <div className="race-checker-container">
       <div className="race-checker-card">
         <div className="race-checker-header">
-          <h1 className="race-checker-title">Facial Ethnicity Analysis</h1>
+          <h1 className="race-checker-title">Facial Ethnicity & Person Analysis</h1>
           <p className="race-checker-subtitle">
-            Our advanced AI analyzes facial features to determine ethnic composition with high accuracy
+            Our advanced AI detects people using YOLOv4 and analyzes facial features to determine ethnic composition
           </p>
         </div>
         
@@ -193,28 +262,32 @@ function CheckRace() {
           ) : (
             <div className="analysis-container">
               <div className="image-preview-container">
-                <div className="image-preview">
-                  <img 
-                    src={preview} 
-                    alt="Preview" 
-                    className="preview-image" 
-                  />
+                {results && results.results ? renderPersonBoxes() : (
+                  <div className="image-preview">
+                    <img 
+                      src={preview} 
+                      alt="Preview" 
+                      className="preview-image" 
+                    />
+                  </div>
+                )}
+                <div className="image-actions">
+                  <p className="image-filename">{file?.name}</p>
                   <button 
                     className="remove-image-button" 
                     onClick={clearImage}
                     aria-label="Remove image"
                   >
-                    <X size={16} />
+                    <X size={16} /> Remove
                   </button>
                 </div>
-                <p className="image-filename">{file?.name}</p>
                 
                 {!isLoading && !results && (
                   <button 
                     className="analyze-button"
                     onClick={analyzeImage}
                   >
-                    Analyze Image <ChevronRight size={18} />
+                    Detect People & Analyze <ChevronRight size={18} />
                   </button>
                 )}
               </div>
@@ -222,42 +295,71 @@ function CheckRace() {
               {isLoading && (
                 <div className="loading-container">
                   <Loader className="loading-spinner" size={40} />
-                  <p className="loading-text">Analyzing facial features...</p>
+                  <p className="loading-text">Detecting people and analyzing facial features...</p>
                   <div className="progress-bar">
                     <div className="progress-fill"></div>
                   </div>
                 </div>
               )}
               
-              {results && (
+              {results && selectedData && (
                 <div className="results-container">
                   <div className="results-header">
+                    <div className="person-summary">
+                      <User size={18} />
+                      <span>{results.persons_count} {results.persons_count === 1 ? 'person' : 'people'} detected</span>
+                      {results.persons_count > 1 && (
+                        <select 
+                          value={selectedPerson} 
+                          onChange={(e) => setSelectedPerson(parseInt(e.target.value))}
+                          className="person-selector"
+                        >
+                          {results.results.map(person => (
+                            <option key={person.person_id} value={person.person_id}>
+                              Person {person.person_id}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                     <div className="results-confidence">
                       <div className="confidence-indicator">
                         <Check size={16} />
                       </div>
-                      <p>Analysis confidence: {Math.round(results.confidence * 100)}%</p>
+                      <div>
+                        <p>Detection confidence: {Math.round(selectedData.detection_confidence * 100)}%</p>
+                        <p>Analysis confidence: {Math.round(selectedData.confidence * 100)}%</p>
+                        <p>
+                          Dominant Ethnicity: <strong>
+                            {formatEthnicGroups(selectedData)
+                              .reduce((max, group) => group.probability > max.probability ? group : max, {probability: 0})
+                              .name}
+                          </strong>
+                        </p>
+                      </div>
                     </div>
                   </div>
                   
                   <div className="ethnic-distribution">
                     <h3 className="results-section-title">Ethnic Distribution</h3>
-                    
-                    {results.ethnicGroups.map((group, index) => (
-                      <div key={index} className="ethnic-group">
-                        <div className="ethnic-group-header">
-                          <span className="ethnic-group-name">{group.name}</span>
-                          <span className="ethnic-group-percentage">{Math.round(group.probability * 100)}%</span>
+
+                    {formatEthnicGroups(selectedData)
+                      .sort((a, b) => b.probability - a.probability)
+                      .map((group, index) => (
+                        <div key={index} className="ethnic-group">
+                          <div className="ethnic-group-header">
+                            <span className="ethnic-group-name">{group.name}</span>
+                            <span className="ethnic-group-percentage">{Math.round(group.probability * 100)}%</span>
+                          </div>
+                          <div className="ethnic-group-bar">
+                            <div
+                              className="ethnic-group-fill"
+                              style={{ width: `${group.probability * 100}%` }}
+                            ></div>
+                          </div>
+                          <p className="ethnic-group-details">{group.details}</p>
                         </div>
-                        <div className="ethnic-group-bar">
-                          <div 
-                            className="ethnic-group-fill"
-                            style={{ width: `${group.probability * 100}%` }}
-                          ></div>
-                        </div>
-                        <p className="ethnic-group-details">{group.details}</p>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                   
                   <div className="facial-features">
@@ -265,15 +367,15 @@ function CheckRace() {
                     <div className="features-grid">
                       <div className="feature">
                         <span className="feature-label">Eye Shape:</span>
-                        <span className="feature-value">{results.analysis.facialFeatures.eyeShape}</span>
+                        <span className="feature-value">{selectedData.facial_features?.eye_shape || "Not analyzed"}</span>
                       </div>
                       <div className="feature">
                         <span className="feature-label">Nose Structure:</span>
-                        <span className="feature-value">{results.analysis.facialFeatures.noseStructure}</span>
+                        <span className="feature-value">{selectedData.facial_features?.nose_structure || "Not analyzed"}</span>
                       </div>
                       <div className="feature">
                         <span className="feature-label">Facial Structure:</span>
-                        <span className="feature-value">{results.analysis.facialFeatures.facialStructure}</span>
+                        <span className="feature-value">{selectedData.facial_features?.facial_structure || "Not analyzed"}</span>
                       </div>
                     </div>
                   </div>

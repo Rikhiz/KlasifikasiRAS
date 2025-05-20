@@ -480,3 +480,21 @@
     padding: 1rem;
   }
 }
+.remove-image-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-image-button:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
