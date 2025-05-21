@@ -31,6 +31,7 @@ img {
 /* Header */
 .header {
   background-color: #fff;
+  backdrop-filter: blur(10px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 16px 0;
 }
@@ -51,6 +52,7 @@ img {
 
 .logo-icon {
   margin-right: 8px;
+  transition: transform 0.3s ease;
 }
 
 .nav {
@@ -59,9 +61,17 @@ img {
 }
 
 .nav-link {
-  margin-right: 24px;
+  position: relative;
+  padding: 10px 16px;
+  border-radius: 8px;
   color: #4B5563;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
 
 /* Button styles */
 .button {
